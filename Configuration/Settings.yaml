@@ -1,0 +1,5 @@
+Flowpack:
+  SchemaOrg:
+    NodeTypes:
+      schemas:
+        jsonFilename: 'resource://Flowpack.SchemaOrg.NodeTypes/Private/Schema/All.json'
