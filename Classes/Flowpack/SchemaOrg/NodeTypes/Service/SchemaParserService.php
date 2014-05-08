@@ -13,104 +13,61 @@ namespace Flowpack\SchemaOrg\NodeTypes\Service;
 
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\Property;
+use Flowpack\SchemaOrg\NodeTypes\Domain\Model\SchemaDefinitions;
 use TYPO3\Flow\Annotations as Flow;
+use TYPO3\Flow\Exception;
 use TYPO3\Flow\Utility\Arrays;
 
 /**
  * Schema.org Parser
+ *
  * @Flow\Scope("singleton")
  */
 class SchemaParserService {
 
 	/**
-	 * @Flow\Inject(settings="Flowpack.SchemaOrg.NodeTypes.schemas.jsonFilename")
-	 * @var string
+	 * @var SchemaDefinitions
 	 */
-	protected $allSchemaJsonFilename;
+	protected $schemaDefinitions;
 
 	/**
 	 * @var array
 	 */
-	protected $schemas = array();
+	protected $schemaCache = array();
 
 	/**
-	 * @param string $jsonSchemaFilename
-	 * @throws \InvalidArgumentException
-	 */
-	public function setAllSchemaJsonFilename($jsonSchemaFilename) {
-		if (!@is_file($jsonSchemaFilename)) {
-			throw new \InvalidArgumentException(sprintf('The given file (%s) is not found', $jsonSchemaFilename), 1396190384);
-		}
-		$this->allSchemaJsonFilename = $jsonSchemaFilename;
-		$this->schemas = array();
-	}
-
-	/**
-	 * @return array
-	 * @throws \InvalidArgumentException
-	 */
-	public function getSchemas() {
-		if ($this->schemas !== array()) {
-			return $this->schemas;
-		}
-		$this->schemas = json_decode(file_get_contents($this->allSchemaJsonFilename), TRUE);
-		if ($this->schemas === NULL) {
-			throw new \InvalidArgumentException('Unable to decode the given json string', 1396168377);
-		}
-		return $this->schemas;
-	}
-
-	/**
-	 * @param array|string $path The path to follow. Either a simple array of keys or a string in the format 'foo.bar.baz'
-	 * @return mixed
-	 */
-	public function getSchemaConfigurationByPath($path) {
-		$rawSchema = $this->getSchemas();
-		return Arrays::getValueByPath($rawSchema, $path);
-	}
-
-	/**
+	 * @param SchemaDefinitions $schemaDefinitions
 	 * @return array
 	 */
-	public function parseAll() {
+	public function parse(SchemaDefinitions $schemaDefinitions) {
+		$this->schemaDefinitions = $schemaDefinitions;
 		$schemas = array();
-		foreach ($this->getSchemaConfigurationByPath('types') as $typeName => $configuration) {
+		foreach ($this->schemaDefinitions->getTypes() as $typeName => $configuration) {
 			$schemas = Arrays::arrayMergeRecursiveOverrule($schemas, $this->parseByType($typeName));
 		}
 		return $schemas;
 	}
 
 	/**
-	 * @param array list of schema type to extract, the ancestors schemas will also be extracted
+	 * @param string $schemaTypeName
 	 * @return array
 	 * @throws \InvalidArgumentException
 	 */
-	public function parseByTypes(array $types) {
-		$schemas = array();
-		foreach ($types as $type) {
-			$schemas = Arrays::arrayMergeRecursiveOverrule($schemas, $this->parseByType($type));
+	protected function parseByType($schemaTypeName) {
+		if (isset($this->schemaCache[$schemaTypeName])) {
+			return $this->schemaCache[$schemaTypeName];
 		}
-
-		return $schemas;
-	}
-
-	/**
-	 * @param string $type
-	 * @return array
-	 * @throws \InvalidArgumentException
-	 */
-	public function parseByType($type) {
 		$schemas = array();
 
-		$currentRawSchema = $this->getSchemaConfigurationByPath(array('types', $type));
+		$currentRawSchema = $this->schemaDefinitions->getTypesByName($schemaTypeName);
 		if ($currentRawSchema === NULL) {
-			throw new \InvalidArgumentException(sprintf('The given type (%s) is not found', $type), 1396190989);
+			throw new \InvalidArgumentException(sprintf('The given type (%s) is not found', $schemaTypeName), 1396190989);
 		}
 
-		$typeName = $this->getNodeTypeName($type);
-		$groupName = strtolower($type);
+		$nodeTypeName = $this->getNodeTypeName($schemaTypeName);
+		$groupName = strtolower($schemaTypeName);
 
-		$nodeType = new NodeType($typeName, TRUE);
+		$nodeType = new NodeType($nodeTypeName, TRUE);
 		$nodeType->setConfigurationByPath('ui', array(
 			'inspector' => array(
 				'groups' => array(
@@ -121,43 +78,40 @@ class SchemaParserService {
 				)
 			)
 		));
-		$nodeType->setConfigurationByPath('properties', $this->processProperties($currentRawSchema['specific_properties'], $groupName));
+		$nodeType->setConfigurationByPath('properties', $this->processProperties($currentRawSchema, $groupName));
 
-		foreach ($this->parseSuperTypes($type) as $superTypeName => $configuration) {
-			$schemas[$superTypeName] = $configuration;
-			if (!isset($schemas[$typeName]['superTypes']) || !is_array($schemas[$typeName]['superTypes'])) {
-				$schemas[$typeName]['superTypes'] = array();
-			}
-			$nodeType->addSuperType($superTypeName);
+		foreach ($currentRawSchema['ancestors'] as $ancestorName) {
+			$nodeType->addAncestor($this->getNodeTypeName($ancestorName));
 		}
 
-		$schemas[$typeName] = $nodeType;
+		foreach ($currentRawSchema['supertypes'] as $superTypeName) {
+			$nodeType->addSuperType($this->getNodeTypeName($superTypeName));
+		}
+
+		$schemas[$nodeTypeName] = $nodeType;
+		$this->schemaCache[$schemaTypeName] = $schemas;
 
 		return $schemas;
 	}
 
 	/**
-	 * @param string $dataType
-	 * @return boolean
-	 */
-	public function isSimpleDataType($dataType) {
-		return $this->getSchemaConfigurationByPath(array('datatypes', $dataType)) ? TRUE : FALSE;
-	}
-
-	/**
-	 * @param array $specificProperties
+	 * @param array $properties
 	 * @param string $groupName
 	 * @return array
 	 * @todo add support for Ranges, when we found a correct solution
+	 * @throws \TYPO3\Flow\Exception
 	 */
-	protected function processProperties(array $specificProperties, $groupName) {
+	protected function processProperties(array $properties, $groupName) {
+		if (!is_array($properties['specific_properties'])) {
+			throw new Exception('Specific properties must be an array', 1398204504);
+		}
 		$currentProperties = array();
-		foreach ($specificProperties as $propertyName) {
-			$propertyConfiguration = $this->getSchemaConfigurationByPath(array('properties', $propertyName));
+		foreach ($properties['specific_properties'] as $propertyName) {
+			$propertyConfiguration = $this->schemaDefinitions->getByPath(array('properties', $propertyName));
 			$type = reset($propertyConfiguration['ranges']);
 
 			$currentProperties[$propertyName] = new Property(
-				$this->isSimpleDataType($type) ? $type : $this->getNodeTypeName($type),
+				$this->schemaDefinitions->isSimpleDataType($type) ? $type : $this->getNodeTypeName($type),
 				$propertyConfiguration['id'],
 				$propertyConfiguration['label'],
 				$propertyConfiguration['comment'],
@@ -166,22 +120,6 @@ class SchemaParserService {
 			);
 		}
 		return $currentProperties;
-	}
-
-	/**
-	 * @param string $type
-	 * @return array
-	 */
-	protected function parseSuperTypes($type) {
-		$schema = array();
-
-		$superTypes = $this->getSchemaConfigurationByPath(array('types', $type, 'supertypes')) ?: array();
-
-		foreach ($superTypes as $superType) {
-			$schema = Arrays::arrayMergeRecursiveOverrule($schema, $this->parseByType($superType));
-		}
-
-		return $schema;
 	}
 
 	/**

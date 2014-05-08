@@ -1,5 +1,5 @@
 <?php
-namespace Flowpack\SchemaOrg\NodeTypes\Command;
+namespace Flowpack\SchemaOrg\NodeTypes\Service;
 
 /*                                                                               *
  * This script belongs to the TYPO3 Flow package "Flowpack.SchemaOrg.NodeTypes". *
@@ -12,39 +12,31 @@ namespace Flowpack\SchemaOrg\NodeTypes\Command;
  *                                                                               */
 
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
+use Flowpack\SchemaOrg\NodeTypes\Domain\Model\Property;
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\SchemaDefinitions;
-use Flowpack\SchemaOrg\NodeTypes\Service\NodeTypeGeneratorService;
-use Flowpack\SchemaOrg\NodeTypes\Service\SchemaParserService;
 use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Cli\CommandController;
+use TYPO3\Flow\Exception;
+use TYPO3\Flow\Utility\Arrays;
 
 /**
- * Schema.org Schema Extraction CLI
+ * Node Type Generator
+ *
+ * @Flow\Scope("singleton")
  */
-class SchemaCommandController extends CommandController {
+class NodeTypeGeneratorService {
 
 	/**
-	 * @Flow\Inject
-	 * @var SchemaParserService
+	 * @Flow\Inject(setting="schemas.storagePath")
+	 * @var string
 	 */
-	protected $schemaParserService;
+	protected $storagePath;
 
 	/**
-	 * @Flow\Inject
-	 * @var NodeTypeGeneratorService
+	 * @param NodeType $nodeType
+	 * @return void
 	 */
-	protected $nodeTypeGeneratorService;
-
-	/**
-	 * Extract Schema.org to build NodeTypes configuration
-	 */
-	public function extractCommand() {
-		$schemaDefintions = new SchemaDefinitions();
-		foreach ($this->schemaParserService->parse($schemaDefintions) as $nodeTypeName=>$nodeType) {
-			/** @var NodeType $nodeType */
-			$this->outputLine(sprintf("Generate %s ...", $nodeTypeName));
-			$this->nodeTypeGeneratorService->generate($nodeType);
-		}
+	public function generate(NodeType $nodeType) {
+		#\TYPO3\Flow\var_dump($nodeType);
 	}
 
 }

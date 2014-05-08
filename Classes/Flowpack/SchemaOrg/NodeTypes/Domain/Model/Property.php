@@ -28,6 +28,7 @@ class Property {
 		'DateTime' => 'date',
 		'Float' => 'float',
 		'Integer' => 'integer',
+		'Number' => 'integer',
 		'Text' => 'string',
 		'Time' => 'date',
 		'URL' => 'string'

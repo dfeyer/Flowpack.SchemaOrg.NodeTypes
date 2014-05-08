@@ -2,4 +2,5 @@ Flowpack:
   SchemaOrg:
     NodeTypes:
       schemas:
-        jsonFilename: 'resource://Flowpack.SchemaOrg.NodeTypes/Private/Schema/All.json'
+        source: 'resource://Flowpack.SchemaOrg.NodeTypes/Private/Schema/All.json'
+        storagePath: '%FLOW_PATH_DATA%Persistent/FlowpackSchemaOrgNodeTypes'

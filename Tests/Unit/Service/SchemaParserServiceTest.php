@@ -27,7 +27,7 @@ class SchemaParserServiceTest extends UnitTestCase {
 	protected function createParser() {
 		parent::setUp();
 		$parser = new SchemaParserService();
-		$parser->setAllSchemaJsonFilename(__DIR__ . '/Fixtures/Minimal.json');
+		$parser->setSchemaJsonDefinitions(__DIR__ . '/Fixtures/Minimal.json');
 		return $parser;
 	}
 
@@ -38,7 +38,7 @@ class SchemaParserServiceTest extends UnitTestCase {
 	 */
 	public function setAllSchemaJsonFilenameThrowAnExceptionIfTheFileIsNotFound() {
 		$parser = $this->createParser();
-		$parser->setAllSchemaJsonFilename(__DIR__ . '/Fixtures/NotFound.json');
+		$parser->setSchemaJsonDefinitions(__DIR__ . '/Fixtures/NotFound.json');
 	}
 
 	/**
@@ -48,7 +48,7 @@ class SchemaParserServiceTest extends UnitTestCase {
 	 */
 	public function getSchemasReturnAnExceptionIfTheGivenJsonFileIsNotValid() {
 		$parser = $this->createParser();
-		$parser->setAllSchemaJsonFilename(__DIR__ . '/Fixtures/Invalid.json');
+		$parser->setSchemaJsonDefinitions(__DIR__ . '/Fixtures/Invalid.json');
 		$parser->getSchemas();
 	}
 
@@ -59,8 +59,8 @@ class SchemaParserServiceTest extends UnitTestCase {
 		$parser = $this->createParser();
 		$parser->parseByTypes(array('Thing'));
 		$currentSchemas = $parser->getSchemas();
-		$parser->setAllSchemaJsonFilename(__DIR__ . '/Fixtures/Empty.json');
-		$this->assertSame(__DIR__ . '/Fixtures/Empty.json', ObjectAccess::getProperty($parser, 'allSchemaJsonFilename', TRUE));
+		$parser->setSchemaJsonDefinitions(__DIR__ . '/Fixtures/Empty.json');
+		$this->assertSame(__DIR__ . '/Fixtures/Empty.json', ObjectAccess::getProperty($parser, 'schemaJsonDefinitions', TRUE));
 		$this->assertNotSame($currentSchemas, $parser->getSchemas());
 	}
 
@@ -93,7 +93,7 @@ class SchemaParserServiceTest extends UnitTestCase {
 	 */
 	public function parseAllReturnAllAvailableNodeType() {
 		$parser = $this->createParser();
-		#$nodeTypes = $parser->parseAll();
-		#$this->assertSame(548, count($nodeTypes));
+		$nodeTypes = $parser->parseAll();
+		$this->assertSame(548, count($nodeTypes));
 	}
 }

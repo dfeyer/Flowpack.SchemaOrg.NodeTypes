@@ -73,7 +73,7 @@ class NodeTypeTest extends UnitTestCase {
 	 */
 	public function getSuperTypeReturnAnArray() {
 		$nodeType = new NodeType('Foo');
-		$this->assertSame(array(), $nodeType->getSuperTypes());
+		$this->assertSame(array(), $nodeType->getAncestors());
 	}
 
 	/**
@@ -81,9 +81,9 @@ class NodeTypeTest extends UnitTestCase {
 	 */
 	public function addSuperTypeRegisterNewSuperType() {
 		$nodeType = new NodeType('Foo');
-		$nodeType->addSuperType('Flowpack.SchemaOrg.NodeTypes:Test');
+		$nodeType->addAncestor('Flowpack.SchemaOrg.NodeTypes:Test');
 		$this->assertSame(array(
 			'Flowpack.SchemaOrg.NodeTypes:Test' => TRUE
-		), $nodeType->getSuperTypes());
+		), $nodeType->getAncestors());
 	}
 }

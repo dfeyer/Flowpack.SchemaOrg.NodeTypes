@@ -48,6 +48,13 @@ class NodeType {
 	protected $final = FALSE;
 
 	/**
+	 * node types this node type inherits from
+	 *
+	 * @var array
+	 */
+	protected $ancestors = array();
+
+	/**
 	 * node types this node type directly inherits from
 	 *
 	 * @var array
@@ -102,6 +109,13 @@ class NodeType {
 	}
 
 	/**
+	 * @param string $ancestor
+	 */
+	public function addAncestor($ancestor) {
+		$this->ancestors[$ancestor] = TRUE;
+	}
+
+	/**
 	 * @param string $superTypeName
 	 */
 	public function addSuperType($superTypeName) {
@@ -111,7 +125,7 @@ class NodeType {
 	/**
 	 * @return array
 	 */
-	public function getSuperTypes() {
-		return $this->superTypes;
+	public function getAncestors() {
+		return $this->ancestors;
 	}
 }
