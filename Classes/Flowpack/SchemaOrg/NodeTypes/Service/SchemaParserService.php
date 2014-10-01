@@ -199,9 +199,7 @@ class SchemaParserService {
 	 */
 	protected function parseSuperTypes($type) {
 		$schema = array();
-
 		$superTypes = $this->getSchemaConfigurationByPath(array('types', $type, 'supertypes')) ?: array();
-
 		foreach ($superTypes as $superType) {
 			$schema = Arrays::arrayMergeRecursiveOverrule($schema, $this->parseByType($superType));
 		}
@@ -212,13 +210,14 @@ class SchemaParserService {
 	/**
 	 * @param string $schemaType
 	 * @return string
+	 * @throws \InvalidException
 	 */
 	protected function getNodeTypeName($schemaType) {
 		$schemaType = trim($schemaType);
 		if ($schemaType === '') {
 			throw new \InvalidException("Empty super type name is not allowed", 1412115678);
 		}
-		return 'Flowpack.SchemaOrg.NodeTypes:' . $schemaType;
+		return $this->configurationService->getPackageKey() . ':' . $schemaType;
 	}
 
 }

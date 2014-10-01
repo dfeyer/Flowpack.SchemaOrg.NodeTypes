@@ -45,6 +45,17 @@ class ConfigurationService {
 	protected $propertyBlackList;
 
 	/**
+	 * @Flow\Inject(setting="defaultPackageKey")
+	 * @var string
+	 */
+	protected $defaultPackageKey;
+
+	/**
+	 * @var string
+	 */
+	protected $packageKey;
+
+	/**
 	 * @param string $nodeTypeName
 	 * @return string
 	 */
@@ -99,6 +110,24 @@ class ConfigurationService {
 		}
 
 		return FALSE;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getPackageKey() {
+		if (trim($this->packageKey) === '') {
+			return $this->defaultPackageKey;
+		}
+
+		return $this->packageKey;
+	}
+
+	/**
+	 * @param string $packageKey
+	 */
+	public function setPackageKey($packageKey) {
+		$this->packageKey = $packageKey;
 	}
 
 }
