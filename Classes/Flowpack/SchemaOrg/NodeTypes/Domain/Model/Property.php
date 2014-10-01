@@ -11,6 +11,7 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
  * The TYPO3 project - inspiring people to share!                                *
  *                                                                               */
 
+use Flowpack\SchemaOrg\NodeTypes\Service\ConfigurationService;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Utility\Arrays;
 
@@ -20,6 +21,11 @@ use TYPO3\Flow\Utility\Arrays;
 class Property {
 
 	/**
+	 * @var ConfigurationService
+	 */
+	protected $configurationService;
+
+	/**
 	 * @var array
 	 */
 	protected $dataTypeMapping = array(
@@ -27,6 +33,7 @@ class Property {
 		'Date' => 'date',
 		'DateTime' => 'date',
 		'Float' => 'float',
+		'Number' => 'integer',
 		'Integer' => 'integer',
 		'Text' => 'string',
 		'Time' => 'date',
@@ -64,6 +71,7 @@ class Property {
 	protected $ui = array();
 
 	/**
+	 * @param ConfigurationService $configurationService
 	 * @param string $type
 	 * @param string $name
 	 * @param string $label
@@ -72,7 +80,8 @@ class Property {
 	 * @param boolean $reloadIfChanged
 	 *
 	 */
-	public function __construct($type, $name, $label, $comment, $groupName, $reloadIfChanged = FALSE) {
+	public function __construct(ConfigurationService $configurationService, $type, $name, $label, $comment, $groupName, $reloadIfChanged = FALSE) {
+		$this->configurationService = $configurationService;
 		$this->type = $this->convertDataType($type);
 		$this->name = (string)$name;
 		$this->label = (string)$label;
@@ -88,13 +97,22 @@ class Property {
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getName() {
+		return $this->name;
+	}
+
+	/**
 	 * @param string $schemaOrgPropertyName
 	 * @return string
 	 * @throws \InvalidArgumentException
+	 * @todo add support for references
 	 */
 	protected function convertDataType($schemaOrgPropertyName) {
 		if (strpos($schemaOrgPropertyName, ':')) {
-			$type = 'reference';
+			$type = substr($schemaOrgPropertyName, -1) === 's' ? 'reference' : 'references';
+			$schemaOrgPropertyName = $this->configurationService->nodeTypeNameMapping($schemaOrgPropertyName);
 			$this->ui = Arrays::setValueByPath($this->ui, 'inspector', array(
 				'editorOptions' => array(
 					'nodeTypes' => array($schemaOrgPropertyName)
@@ -107,5 +125,17 @@ class Property {
 			$type = (string)$this->dataTypeMapping[$schemaOrgPropertyName];
 		}
 		return $type;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getConfiguration() {
+		$configuration = array(
+			'type' => $this->type,
+			'ui' => $this->ui
+		);
+
+		return $configuration;
 	}
 }

@@ -11,48 +11,50 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
  * The TYPO3 project - inspiring people to share!                                *
  *                                                                               */
 
+use Flowpack\SchemaOrg\NodeTypes\Service\ConfigurationService;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Utility\Arrays;
 
 /**
- * Schema Model
+ * NodeType Definition
  */
 class NodeType {
 
 	/**
-	 * Name of this node type. Example: "TYPO3CR:Folder"
-	 *
+	 * @Flow\Inject
+	 * @var ConfigurationService
+	 */
+	protected $configurationService;
+
+	/**
 	 * @var string
 	 */
 	protected $name;
 
 	/**
-	 * Configuration for this node type, can be an arbitrarily nested array.
-	 *
 	 * @var array
 	 */
 	protected $configuration = array();
 
 	/**
-	 * Is this node type marked abstract
-	 *
 	 * @var boolean
 	 */
 	protected $abstract = FALSE;
 
 	/**
-	 * Is this node type marked final
-	 *
 	 * @var boolean
 	 */
 	protected $final = FALSE;
 
 	/**
-	 * node types this node type directly inherits from
-	 *
 	 * @var array
 	 */
 	protected $superTypes = array();
+
+	/**
+	 * @var array
+	 */
+	protected $properties = array();
 
 	/**
 	 * @param string $name
@@ -70,6 +72,14 @@ class NodeType {
 	 */
 	public function getName() {
 		return $this->name;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getLabel() {
+		list(, $label) = explode(':', $this->getName());
+		return $label;
 	}
 
 	/**
@@ -102,6 +112,14 @@ class NodeType {
 	}
 
 	/**
+	 * @param array|string $path The path to follow. Either a simple array of keys or a string in the format 'foo.bar.baz'
+	 * @param mixed $value
+	 */
+	public function getConfigurationByPath($path) {
+		$this->configuration = Arrays::getValueByPath($this->configuration, $path);
+	}
+
+	/**
 	 * @param string $superTypeName
 	 */
 	public function addSuperType($superTypeName) {
@@ -112,6 +130,59 @@ class NodeType {
 	 * @return array
 	 */
 	public function getSuperTypes() {
-		return $this->superTypes;
+		$superTypes = array();
+		foreach ($this->superTypes as $superTypeName=>$superTypeStatus) {
+			if ($superTypeStatus === TRUE) {
+				$superTypes[] = $superTypeName;
+			}
+		}
+
+		return $superTypes;
 	}
+
+	/**
+	 * @return boolean
+	 */
+	public function hasSuperTypes() {
+		return (boolean)count($this->getSuperTypes());
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getProperties() {
+		return $this->properties;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getPropertiesConfiguration() {
+		$properties = array();
+		foreach ($this->properties as $property) {
+			/** @var Property $property */
+			$propertyName = $property->getName();
+			$configuration = $property->getConfiguration();
+
+			$properties[$propertyName] = $this->configurationService->mergeNodeTypeConfigurationWithDefaultConfiguration($propertyName, $this->getName(), $configuration);
+		}
+
+
+		return $properties;
+	}
+
+	/**
+	 * @param array $properties
+	 */
+	public function setProperties($properties) {
+		$this->properties = $properties;
+	}
+
+	/**
+	 * @return boolean
+	 */
+	public function hasProperties() {
+		return (boolean)count($this->getProperties());
+	}
+
 }

@@ -23,7 +23,13 @@ use TYPO3\Flow\Utility\Arrays;
 class SchemaParserService {
 
 	/**
-	 * @Flow\Inject(settings="Flowpack.SchemaOrg.NodeTypes.schemas.jsonFilename")
+	 * @Flow\Inject(lazy=false)
+	 * @var ConfigurationService
+	 */
+	protected $configurationService;
+
+	/**
+	 * @Flow\Inject(setting="schemas.jsonFilename")
 	 * @var string
 	 */
 	protected $allSchemaJsonFilename;
@@ -77,6 +83,7 @@ class SchemaParserService {
 		foreach ($this->getSchemaConfigurationByPath('types') as $typeName => $configuration) {
 			$schemas = Arrays::arrayMergeRecursiveOverrule($schemas, $this->parseByType($typeName));
 		}
+		ksort($schemas);
 		return $schemas;
 	}
 
@@ -90,7 +97,7 @@ class SchemaParserService {
 		foreach ($types as $type) {
 			$schemas = Arrays::arrayMergeRecursiveOverrule($schemas, $this->parseByType($type));
 		}
-
+		ksort($schemas);
 		return $schemas;
 	}
 
@@ -111,25 +118,33 @@ class SchemaParserService {
 		$groupName = strtolower($type);
 
 		$nodeType = new NodeType($typeName, TRUE);
+		$inspector = array(
+			'label' => $currentRawSchema['label']
+		);
+		if ($currentRawSchema['comment']) {
+			$inspector['comment'] = $currentRawSchema['comment'];
+		}
 		$nodeType->setConfigurationByPath('ui', array(
 			'inspector' => array(
 				'groups' => array(
-					$groupName => array(
-						'label' => $currentRawSchema['label'],
-						'comment' => $currentRawSchema['comment'] ?: NULL
-					)
+					$groupName => $inspector
 				)
 			)
 		));
-		$nodeType->setConfigurationByPath('properties', $this->processProperties($currentRawSchema['specific_properties'], $groupName));
 
 		foreach ($this->parseSuperTypes($type) as $superTypeName => $configuration) {
 			$schemas[$superTypeName] = $configuration;
 			if (!isset($schemas[$typeName]['superTypes']) || !is_array($schemas[$typeName]['superTypes'])) {
 				$schemas[$typeName]['superTypes'] = array();
 			}
-			$nodeType->addSuperType($superTypeName);
 		}
+		$superTypes = $this->getSchemaConfigurationByPath(array('types', $type, 'supertypes'));
+		$superType = trim(array_shift($superTypes));
+		if ($superType !== '') {
+			$nodeType->addSuperType($this->getNodeTypeName($superType));
+		}
+
+		$nodeType->setProperties($this->processProperties($currentRawSchema['specific_properties'], $groupName, $nodeType));
 
 		$schemas[$typeName] = $nodeType;
 
@@ -147,16 +162,26 @@ class SchemaParserService {
 	/**
 	 * @param array $specificProperties
 	 * @param string $groupName
+	 * @param NodeType $nodeType
 	 * @return array
 	 * @todo add support for Ranges, when we found a correct solution
 	 */
-	protected function processProperties(array $specificProperties, $groupName) {
+	protected function processProperties(array $specificProperties, $groupName, NodeType $nodeType) {
 		$currentProperties = array();
 		foreach ($specificProperties as $propertyName) {
+			$skipProperty = FALSE;
 			$propertyConfiguration = $this->getSchemaConfigurationByPath(array('properties', $propertyName));
 			$type = reset($propertyConfiguration['ranges']);
+			foreach ($this->configurationService->getNodeTypeMixinsByProperty($propertyName, $type) as $mixin) {
+				$nodeType->addSuperType($mixin);
+				$skipProperty = TRUE;
+			}
 
+			if ($skipProperty || $this->configurationService->isPropertyBlacklisted($propertyName, $type)) {
+				continue;
+			}
 			$currentProperties[$propertyName] = new Property(
+				$this->configurationService,
 				$this->isSimpleDataType($type) ? $type : $this->getNodeTypeName($type),
 				$propertyConfiguration['id'],
 				$propertyConfiguration['label'],
@@ -189,6 +214,10 @@ class SchemaParserService {
 	 * @return string
 	 */
 	protected function getNodeTypeName($schemaType) {
+		$schemaType = trim($schemaType);
+		if ($schemaType === '') {
+			throw new \InvalidException("Empty super type name is not allowed", 1412115678);
+		}
 		return 'Flowpack.SchemaOrg.NodeTypes:' . $schemaType;
 	}
 

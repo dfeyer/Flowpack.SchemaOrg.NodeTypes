@@ -1,0 +1,47 @@
+# Description mixin
+'Flowpack.SchemaOrg.NodeTypes:DescriptionMixin':
+  abstract: TRUE
+  properties:
+    description:
+      type: string
+      defaultValue: '<p>Enter text here</p>'
+      ui:
+        inlineEditable: TRUE
+        aloha:
+          'format':
+            'b': TRUE
+            'i': TRUE
+            'u': TRUE
+            'sub': TRUE
+            'sup': TRUE
+            'p': TRUE
+            'h1': TRUE
+            'h2': TRUE
+            'h3': TRUE
+            'pre': TRUE
+            'removeFormat': TRUE
+          'table':
+            'table': TRUE
+          'list':
+            'ol': TRUE
+            'ul': TRUE
+          'link':
+            'a': TRUE
+
+# ArticleBody mixin
+'Flowpack.SchemaOrg.NodeTypes:ArticleBodyMixin':
+  abstract: TRUE
+  childNodes:
+    articleBody:
+      type: 'TYPO3.Neos:ContentCollection'
+
+# Comment mixin
+'Flowpack.SchemaOrg.NodeTypes:CommentMixin':
+  abstract: TRUE
+  childNodes:
+    comment:
+      type: 'TYPO3.Neos:ContentCollection'
+      constraints:
+        nodeTypes:
+          '*': FALSE
+          'Flowpack.SchemaOrg.NodeTypes:UserComments': TRUE

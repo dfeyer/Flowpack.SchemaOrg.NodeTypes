@@ -93,7 +93,7 @@ class SchemaParserServiceTest extends UnitTestCase {
 	 */
 	public function parseAllReturnAllAvailableNodeType() {
 		$parser = $this->createParser();
-		#$nodeTypes = $parser->parseAll();
-		#$this->assertSame(548, count($nodeTypes));
+		$nodeTypes = $parser->parseAll();
+		$this->assertSame(548, count($nodeTypes));
 	}
 }

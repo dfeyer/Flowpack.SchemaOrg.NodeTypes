@@ -1,5 +1,224 @@
 Flowpack:
   SchemaOrg:
     NodeTypes:
+      renderedNodeTypeRootPath: '%FLOW_PATH_DATA%NodeTypes/Configuration/'
+
       schemas:
         jsonFilename: 'resource://Flowpack.SchemaOrg.NodeTypes/Private/Schema/All.json'
+
+      nodeTypeMapping:
+        ImageObject: 'TYPO3.Neos.NodeTypes:Image'
+
+      propertyBlackList:
+        # todo: need to add support for a relation with an other Document
+        'sameAs': TRUE
+        # Need to be defined in TypoScript / Fluid, logic based
+        'url': TRUE
+        'wordCount': TRUE
+        'aggregateRating': TRUE
+        'interactionCount': TRUE
+
+      propertyMixinsMapping:
+        'image':
+          - 'TYPO3.Neos.NodeTypes:ImageMixin'
+          - 'TYPO3.Neos.NodeTypes:ImageCaptionMixin'
+        'description':
+          - 'Flowpack.SchemaOrg.NodeTypes:DescriptionMixin'
+        'articleBody':
+          - 'Flowpack.SchemaOrg.NodeTypes:ArticleBodyMixin'
+        'comment':
+          - 'Flowpack.SchemaOrg.NodeTypes:CommentMixin'
+
+      propertyDefaultConfiguration:
+        'email':
+          type: 'string'
+          validation:
+            validation:
+              'TYPO3.Neos/Validation/EmailAddressValidator': []
+        'proficiencyLevel':
+          ui:
+            inspector:
+              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editorOptions:
+                values:
+                  '':
+                    label: ''
+                  'beginner':
+                    label: 'Beginner'
+                  'expert':
+                    label: 'Expert'
+
+        # @see http://www.w3.org/wiki/WebSchemas/Accessibility
+        'accessibilityAPI':
+          ui:
+            inspector:
+              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editorOptions:
+                values:
+                  '':
+                    label: ''
+                  'AndroidAccessibility':
+                    label: 'AndroidAccessibility'
+                  'ARIA':
+                    label: 'ARIA'
+                  'ATK':
+                    label: 'ATK'
+                  'AT-SPI':
+                    label: 'AT-SPI'
+                  'BlackberryAccessibility':
+                    label: 'BlackberryAccessibility'
+                  'iAccessible2':
+                    label: 'iAccessible2'
+                  'iOSAccessibility':
+                    label: 'iOSAccessibility'
+                  'JavaAccessibility':
+                    label: 'JavaAccessibility'
+                  'MacOSXAccessibility':
+                    label: 'MacOSXAccessibility'
+                  'MSAA':
+                    label: 'MSAA'
+                  'UIAutomation':
+                    label: 'UIAutomation'
+
+        # @see http://www.w3.org/wiki/WebSchemas/Accessibility
+        'accessibilityControl':
+          ui:
+            inspector:
+              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editorOptions:
+                values:
+                  '':
+                    label: ''
+                  'fullKeyboardControl':
+                    label: 'fullKeyboardControl'
+                  'fullMouseControl':
+                    label: 'fullMouseControl'
+                  'fullSwitchControl':
+                    label: 'fullSwitchControl'
+                  'fullTouchControl':
+                    label: 'fullTouchControl'
+                  'fullVideoControl':
+                    label: 'fullVideoControl'
+                  'fullVoiceControl':
+                    label: 'fullVoiceControl'
+
+        # @see http://www.w3.org/wiki/WebSchemas/Accessibility
+        'accessibilityFeature':
+          ui:
+            inspector:
+              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editorOptions:
+                values:
+                  '':
+                    label: ''
+                  'alternativeText':
+                    label: 'alternativeText'
+                  'annotations':
+                    label: 'annotations'
+                  'audioDescription':
+                    label: 'audioDescription'
+                  'bookmarks':
+                    label: 'bookmarks'
+                  'braille':
+                    label: 'braille'
+                  'captions':
+                    label: 'captions'
+                  'ChemML':
+                    label: 'ChemML'
+                  'describedMath':
+                    label: 'describedMath'
+                  'displayTransformability':
+                    label: 'displayTransformability'
+                  'highContrastAudio':
+                    label: 'highContrastAudio'
+                  'highContrastDisplay':
+                    label: 'highContrastDisplay'
+                  'index':
+                    label: 'index'
+                  'largePrint':
+                    label: 'largePrint'
+                  'latex':
+                    label: 'latex'
+                  'longDescription':
+                    label: 'longDescription'
+                  'MathML':
+                    label: 'MathML'
+                  'none':
+                    label: 'none'
+                  'printPageNumbers':
+                    label: 'printPageNumbers'
+                  'readingOrder':
+                    label: 'readingOrder'
+                  'signLanguage':
+                    label: 'signLanguage'
+                  'structuralNavigation':
+                    label: 'structuralNavigation'
+                  'tableOfContents':
+                    label: 'tableOfContents'
+                  'taggedPDF':
+                    label: 'taggedPDF'
+                  'tactileGraphic':
+                    label: 'tactileGraphic'
+                  'tactileObject':
+                    label: 'tactileObject'
+                  'timingControl':
+                    label: 'timingControl'
+                  'transcript':
+                    label: 'transcript'
+                  'ttsMarkup':
+                    label: 'ttsMarkup'
+                  'unlocked':
+                    label: 'unlocked'
+
+        # @see http://www.w3.org/wiki/WebSchemas/Accessibility
+        'accessibilityHazard':
+          ui:
+            inspector:
+              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editorOptions:
+                values:
+                  '':
+                    label: ''
+                  'flashing':
+                    label: 'flashing'
+                  'noFlashingHazard':
+                    label: 'noFlashingHazard'
+                  'motionSimulation':
+                    label: 'motionSimulation'
+                  'noMotionSimulationHazard':
+                    label: 'noMotionSimulationHazard'
+                  'sound':
+                    label: 'sound'
+                  'noSoundHazard':
+                    label: 'noSoundHazard'
+
+        'educationalUse':
+          ui:
+            inspector:
+              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editorOptions:
+                values:
+                  '':
+                    label: ''
+                  'assignment':
+                    label: 'assignment'
+                  'group work':
+                    label: 'group work'
+
+        'interactivityType':
+          ui:
+            inspector:
+              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editorOptions:
+                values:
+                  '':
+                    label: ''
+                  'active':
+                    label: 'active'
+                  'expositive':
+                    label: 'expositive'
+                  'mixed':
+                    label: 'mixed'
+
+        'associatedMedia':
+          type: array<TYPO3\Media\Domain\Model\Asset>
