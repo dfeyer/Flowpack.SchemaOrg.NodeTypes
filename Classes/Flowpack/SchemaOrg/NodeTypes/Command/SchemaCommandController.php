@@ -12,6 +12,7 @@ namespace Flowpack\SchemaOrg\NodeTypes\Command;
  *                                                                               */
 
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
+use Flowpack\SchemaOrg\NodeTypes\Service\ConfigurationService;
 use Flowpack\SchemaOrg\NodeTypes\Service\NodeTypeBuilder;
 use Flowpack\SchemaOrg\NodeTypes\Service\SchemaParserService;
 use TYPO3\Flow\Annotations as Flow;
@@ -43,6 +44,12 @@ class SchemaCommandController extends CommandController {
 	protected $nodeTypeBuilder;
 
 	/**
+	 * @Flow\Inject
+	 * @var ConfigurationService
+	 */
+	protected $configurationService;
+
+	/**
 	 * @Flow\Inject(setting="schemas.jsonFilename")
 	 * @var string
 	 */
@@ -51,11 +58,12 @@ class SchemaCommandController extends CommandController {
 	/**
 	 * Extract Schema.org to build NodeTypes configuration
 	 *
-	 * @param string $packageKey The package key
 	 * @param string $name The name of the file
+	 * @param string $packageKey The package key
 	 * @param string $type The Type from schema.org
 	 */
-	public function extractCommand($packageKey, $name, $type = NULL) {
+	public function extractCommand($name, $packageKey = NULL, $type = NULL) {
+		$this->configurationService->setPackageKey($packageKey);
 		$this->outputLine();
 		$this->outputFormatted("# Extracting schema.org ...");
 
@@ -75,8 +83,7 @@ class SchemaCommandController extends CommandController {
 
 		foreach ($nodeTypes as $nodeType) {
 			/** @var NodeType $nodeType */
-			$this->outputLine();
-			$this->outputLine("## Generating NodeType \"<b>" . $nodeType->getName() . "</b>\" ...");
+			$this->outputLine("+ <b>" . $nodeType->getName() . "</b>");
 
 			try {
 				$existingNodeType = $this->nodeTypeManager->getNodeType($nodeType->getName());
@@ -88,8 +95,13 @@ class SchemaCommandController extends CommandController {
 
 			$filename = $this->nodeTypeBuilder->dump($nodeType);
 
-			$this->outputFormatted("   " . $filename);
 		}
+
+		$this->outputLine();
+		$this->outputFormatted("The following file contain your new NodeType: " . $filename);
+
+		$this->outputLine();
+		$this->outputFormatted("We are on Github, Pull request welcome or open an issue if you have trouble ...");
 	}
 
 }
