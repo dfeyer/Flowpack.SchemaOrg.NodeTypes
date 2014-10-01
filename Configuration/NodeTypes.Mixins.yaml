@@ -45,3 +45,17 @@
         nodeTypes:
           '*': FALSE
           'Flowpack.SchemaOrg.NodeTypes:UserComments': TRUE
+
+# Adress mixin
+'Flowpack.SchemaOrg.NodeTypes:AdressMixin':
+  abstract: TRUE
+  childNodes:
+    address:
+      type: 'Flowpack.SchemaOrg.NodeTypes:PostalAddress'
+
+# Location mixin
+'Flowpack.SchemaOrg.NodeTypes:LocationMixin':
+  abstract: TRUE
+  childNodes:
+    location:
+      type: 'Flowpack.SchemaOrg.NodeTypes:PostalAddress'

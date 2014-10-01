@@ -3,6 +3,8 @@ Flowpack:
     NodeTypes:
       renderedNodeTypeRootPath: '%FLOW_PATH_DATA%NodeTypes/Configuration/'
 
+      defaultPackageKey: 'Flowpack.SchemaOrg.NodeTypes'
+
       schemas:
         jsonFilename: 'resource://Flowpack.SchemaOrg.NodeTypes/Private/Schema/All.json'
 
@@ -14,6 +16,7 @@ Flowpack:
         'sameAs': TRUE
         # Need to be defined in TypoScript / Fluid, logic based
         'url': TRUE
+        'breadcrumb': TRUE
         'wordCount': TRUE
         'aggregateRating': TRUE
         'interactionCount': TRUE
@@ -28,6 +31,10 @@ Flowpack:
           - 'Flowpack.SchemaOrg.NodeTypes:ArticleBodyMixin'
         'comment':
           - 'Flowpack.SchemaOrg.NodeTypes:CommentMixin'
+        'address':
+          - 'Flowpack.SchemaOrg.NodeTypes:AdressMixin'
+        'location':
+          - 'Flowpack.SchemaOrg.NodeTypes:LocationMixin'
 
       propertyDefaultConfiguration:
         'email':
@@ -35,6 +42,7 @@ Flowpack:
           validation:
             validation:
               'TYPO3.Neos/Validation/EmailAddressValidator': []
+
         'proficiencyLevel':
           ui:
             inspector:
