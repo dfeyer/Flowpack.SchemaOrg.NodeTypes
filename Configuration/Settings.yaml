@@ -76,17 +76,17 @@ Flowpack:
         'comment':
           - 'Flowpack.SchemaOrg.NodeTypes:CommentMixin'
 
-        'address':
-          - 'Flowpack.SchemaOrg.NodeTypes:AdressMixin'
+#        'address':
+#          - 'Flowpack.SchemaOrg.NodeTypes:AdressMixin'
 
-        'location':
-          - 'Flowpack.SchemaOrg.NodeTypes:LocationMixin'
+#        'location':
+#          - 'Flowpack.SchemaOrg.NodeTypes:LocationMixin'
 
-        'geo':
-          - 'Flowpack.SchemaOrg.NodeTypes:GeoMixin'
+#        'geo':
+#          - 'Flowpack.SchemaOrg.NodeTypes:GeoMixin'
 
-        'openingHoursSpecification':
-          - 'Flowpack.SchemaOrg.NodeTypes:OpeningHoursSpecificationMixin'
+#        'openingHoursSpecification':
+#          - 'Flowpack.SchemaOrg.NodeTypes:OpeningHoursSpecificationMixin'
 
         'photo':
           - 'Flowpack.SchemaOrg.NodeTypes:PhotoMixin'
