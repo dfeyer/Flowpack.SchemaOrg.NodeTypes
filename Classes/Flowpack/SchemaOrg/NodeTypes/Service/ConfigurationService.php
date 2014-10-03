@@ -33,6 +33,12 @@ class ConfigurationService {
 	protected $propertyDefaultConfiguration;
 
 	/**
+	 * @Flow\Inject(setting="typeDefaultConfiguration")
+	 * @var string
+	 */
+	protected $typeDefaultConfiguration;
+
+	/**
 	 * @Flow\Inject(setting="propertyMixinsMapping")
 	 * @var string
 	 */
@@ -69,13 +75,28 @@ class ConfigurationService {
 	}
 
 	/**
+	 * @param string $type
+	 * @return array
+	 */
+	public function getTypeDefaultConfiguration($type) {
+		$configuration = $this->typeDefaultConfiguration['*'];
+		if (isset($this->typeDefaultConfiguration[$type])) {
+			$configuration = Arrays::arrayMergeRecursiveOverrule($configuration, $this->typeDefaultConfiguration[$type]);
+		}
+
+		return $configuration;
+	}
+
+	/**
 	 * @param string $propertyName
 	 * @param string $nodeTypeName
 	 * @param array $configuration
 	 * @return array
 	 * @todo add support for property configuration override for a given $nodeTypeName
 	 */
-	public function mergeNodeTypeConfigurationWithDefaultConfiguration($propertyName, $nodeTypeName, array $configuration) {
+	public function mergePropertyConfigurationWithDefaultConfiguration($propertyName, $nodeTypeName, array $configuration) {
+		$defaultConfiguration = $this->propertyDefaultConfiguration['*'];
+		$configuration = Arrays::arrayMergeRecursiveOverrule($defaultConfiguration, $configuration);
 		if (isset($this->propertyDefaultConfiguration[$propertyName]) && is_array($this->propertyDefaultConfiguration[$propertyName])) {
 			$configuration = Arrays::arrayMergeRecursiveOverrule($configuration, $this->propertyDefaultConfiguration[$propertyName]);
 		}

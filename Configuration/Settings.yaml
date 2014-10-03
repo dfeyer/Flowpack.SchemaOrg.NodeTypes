@@ -12,7 +12,7 @@ Flowpack:
         ImageObject: 'TYPO3.Neos.NodeTypes:Image'
 
       propertyBlackList:
-        # todo: need to add support for a relation with an other Document
+        # todo: add support for relation to an other Document
         'sameAs': TRUE
         # Need to be defined in TypoScript / Fluid, logic based
         'url': TRUE
@@ -21,27 +21,94 @@ Flowpack:
         'aggregateRating': TRUE
         'interactionCount': TRUE
 
+      # By default the parser create abstract node, this can be change here
+      typeDefaultConfiguration:
+        '*':
+          abstract: TRUE
+          nodeLabelGenerator: 'Flowpack\SchemaOrg\NodeTypes\Domain\Model\DefaultNodeLabelGenerator'
+          ui:
+            icon: 'icon-gear'
+
+        'Review':
+          abstract: FALSE
+          superTypes:
+            - 'TYPO3.Neos.NodeTypes:Page'
+
+        'PostalAddress':
+          ui:
+            icon: 'icon-building'
+
+        'GeoCoordinates':
+          ui:
+            icon: 'icon-map-marker'
+
+        'OpeningHoursSpecification':
+          ui:
+            icon: 'icon-time'
+
+        'Event':
+          abstract: FALSE
+          superTypes:
+            - 'TYPO3.Neos.NodeTypes:Page'
+
+        'Place':
+          abstract: FALSE
+          superTypes:
+            - 'TYPO3.Neos:Content'
+
+        'VideoObject':
+          abstract: FALSE
+          superTypes:
+            - 'TYPO3.Neos:Content'
+
+
       propertyMixinsMapping:
         'image':
           - 'TYPO3.Neos.NodeTypes:ImageMixin'
           - 'TYPO3.Neos.NodeTypes:ImageCaptionMixin'
+
         'description':
           - 'Flowpack.SchemaOrg.NodeTypes:DescriptionMixin'
+
         'articleBody':
           - 'Flowpack.SchemaOrg.NodeTypes:ArticleBodyMixin'
+
         'comment':
           - 'Flowpack.SchemaOrg.NodeTypes:CommentMixin'
+
         'address':
           - 'Flowpack.SchemaOrg.NodeTypes:AdressMixin'
+
         'location':
           - 'Flowpack.SchemaOrg.NodeTypes:LocationMixin'
 
+        'geo':
+          - 'Flowpack.SchemaOrg.NodeTypes:GeoMixin'
+
+        'openingHoursSpecification':
+          - 'Flowpack.SchemaOrg.NodeTypes:OpeningHoursSpecificationMixin'
+
+        'photo':
+          - 'Flowpack.SchemaOrg.NodeTypes:PhotoMixin'
+
+        'photos':
+          - 'Flowpack.SchemaOrg.NodeTypes:PhotosMixin'
+
       propertyDefaultConfiguration:
+        '*':
+          ui:
+            reloadIfChanged: TRUE
+
         'email':
           type: 'string'
           validation:
             validation:
               'TYPO3.Neos/Validation/EmailAddressValidator': []
+
+        'logo':
+          type: TYPO3\Media\Domain\Model\ImageVariant
+          ui:
+            label: 'Image'
 
         'proficiencyLevel':
           ui:

@@ -62,7 +62,8 @@ class SchemaCommandController extends CommandController {
 	 * @param string $packageKey The package key
 	 * @param string $type The Type from schema.org
 	 */
-	public function extractCommand($name, $packageKey = NULL, $type = NULL) {
+	public function extractCommand($name = NULL, $packageKey = NULL, $type = NULL) {
+		$name = $name ?: 'Default';
 		$this->configurationService->setPackageKey($packageKey);
 		$this->outputLine();
 		$this->outputFormatted("# Extracting schema.org ...");
@@ -81,6 +82,7 @@ class SchemaCommandController extends CommandController {
 			->setFilename($filename)
 			->unlinkExistingFile();
 
+		$success = $error = 0;
 		foreach ($nodeTypes as $nodeType) {
 			/** @var NodeType $nodeType */
 			$this->outputLine("+ <b>" . $nodeType->getName() . "</b>");
@@ -88,17 +90,19 @@ class SchemaCommandController extends CommandController {
 			try {
 				$existingNodeType = $this->nodeTypeManager->getNodeType($nodeType->getName());
 				$this->outputFormatted("   - <b>NodeType \"%s\" skipped</b>, update is not supported ...", array($existingNodeType->getName()));
-				$this->sendAndExit(1);
+				++$error;
 			} catch (NodeTypeNotFoundException $exception) {
-
+				$filename = $this->nodeTypeBuilder->dump($nodeType);
+				++$success;
 			}
-
-			$filename = $this->nodeTypeBuilder->dump($nodeType);
-
 		}
 
 		$this->outputLine();
-		$this->outputFormatted("The following file contain your new NodeType: " . $filename);
+		if ($success > 0) {
+			$this->outputFormatted("The following file contain your new NodeType: " . $filename);
+		} else {
+			$this->outputFormatted("Nothing to do ...");
+		}
 
 		$this->outputLine();
 		$this->outputFormatted("We are on Github, Pull request welcome or open an issue if you have trouble ...");

@@ -80,8 +80,8 @@ class SchemaParserService {
 	 */
 	public function parseAll() {
 		$schemas = array();
-		foreach ($this->getSchemaConfigurationByPath('types') as $typeName => $configuration) {
-			$schemas = Arrays::arrayMergeRecursiveOverrule($schemas, $this->parseByType($typeName));
+		foreach ($this->getSchemaConfigurationByPath('types') as $type => $configuration) {
+			$schemas = $this->mergeSchema($schemas, $this->parseByType($type));
 		}
 		ksort($schemas);
 		return $schemas;
@@ -95,7 +95,7 @@ class SchemaParserService {
 	public function parseByTypes(array $types) {
 		$schemas = array();
 		foreach ($types as $type) {
-			$schemas = Arrays::arrayMergeRecursiveOverrule($schemas, $this->parseByType($type));
+			$schemas = $this->mergeSchema($schemas, $this->parseByType($type));
 		}
 		ksort($schemas);
 		return $schemas;
@@ -107,6 +107,14 @@ class SchemaParserService {
 	 * @throws \InvalidArgumentException
 	 */
 	public function parseByType($type) {
+		static $parsedTypes = array();
+
+		if (!$type || isset($parsedTypes[$type])) {
+			return;
+		}
+
+		$parsedTypes[$type] = TRUE;
+
 		$schemas = array();
 
 		$currentRawSchema = $this->getSchemaConfigurationByPath(array('types', $type));
@@ -117,7 +125,7 @@ class SchemaParserService {
 		$typeName = $this->getNodeTypeName($type);
 		$groupName = strtolower($type);
 
-		$nodeType = new NodeType($typeName, TRUE);
+		$nodeType = new NodeType($typeName, $type);
 		$inspector = array(
 			'label' => $currentRawSchema['label']
 		);
@@ -146,6 +154,8 @@ class SchemaParserService {
 
 		$nodeType->setProperties($this->processProperties($currentRawSchema['specific_properties'], $groupName, $nodeType));
 
+		$this->parseRelatedNodeTypes($nodeType, $schemas);
+
 		$schemas[$typeName] = $nodeType;
 
 		return $schemas;
@@ -172,15 +182,17 @@ class SchemaParserService {
 			$skipProperty = FALSE;
 			$propertyConfiguration = $this->getSchemaConfigurationByPath(array('properties', $propertyName));
 			$type = reset($propertyConfiguration['ranges']);
+
+			if ($this->configurationService->isPropertyBlacklisted($propertyName, $type)) {
+				continue;
+			}
+
 			foreach ($this->configurationService->getNodeTypeMixinsByProperty($propertyName, $type) as $mixin) {
 				$nodeType->addSuperType($mixin);
 				$skipProperty = TRUE;
 			}
 
-			if ($skipProperty || $this->configurationService->isPropertyBlacklisted($propertyName, $type)) {
-				continue;
-			}
-			$currentProperties[$propertyName] = new Property(
+			$property = new Property(
 				$this->configurationService,
 				$this->isSimpleDataType($type) ? $type : $this->getNodeTypeName($type),
 				$propertyConfiguration['id'],
@@ -189,6 +201,9 @@ class SchemaParserService {
 				$groupName,
 				FALSE
 			);
+
+			$property->setSkipProperty($skipProperty);
+			$currentProperties[$propertyName] = $property;
 		}
 		return $currentProperties;
 	}
@@ -198,13 +213,39 @@ class SchemaParserService {
 	 * @return array
 	 */
 	protected function parseSuperTypes($type) {
-		$schema = array();
+		$schemas = array();
 		$superTypes = $this->getSchemaConfigurationByPath(array('types', $type, 'supertypes')) ?: array();
 		foreach ($superTypes as $superType) {
-			$schema = Arrays::arrayMergeRecursiveOverrule($schema, $this->parseByType($superType));
+			$schemas = $this->mergeSchema($schemas, $this->parseByType($superType));
 		}
 
-		return $schema;
+		return $schemas;
+	}
+
+	/**
+	 * @param NodeType $nodeType
+	 * @param array $schema
+	 */
+	protected function parseRelatedNodeTypes(NodeType $nodeType, array &$schema) {
+		foreach ($nodeType->getRelatedNodeTypes() as $nodeType => $status) {
+			$typeName = $this->getSchemaOrgTypeName($nodeType);
+			if ($typeName === NULL || isset($schemas[$typeName])) {
+				continue;
+			}
+			$schema = $this->mergeSchema($schema, $this->parseByType($typeName));
+		}
+	}
+
+	/**
+	 * @param array $currentSchemas
+	 * @param array|null $additionalSchemas
+	 * @return array
+	 */
+	protected function mergeSchema(array $currentSchemas, $additionalSchemas) {
+		if (is_array($additionalSchemas)) {
+			$currentSchemas = Arrays::arrayMergeRecursiveOverrule($currentSchemas, $additionalSchemas);
+		}
+		return $currentSchemas;
 	}
 
 	/**
@@ -218,6 +259,14 @@ class SchemaParserService {
 			throw new \InvalidException("Empty super type name is not allowed", 1412115678);
 		}
 		return $this->configurationService->getPackageKey() . ':' . $schemaType;
+	}
+
+	protected function getSchemaOrgTypeName($nodeType) {
+		if (strpos($nodeType, $this->configurationService->getPackageKey()) === FALSE) {
+			return NULL;
+		}
+
+		return str_replace($this->configurationService->getPackageKey() . ':', '', $nodeType);
 	}
 
 }

@@ -37,14 +37,9 @@ class NodeType {
 	protected $configuration = array();
 
 	/**
-	 * @var boolean
+	 * @var string
 	 */
-	protected $abstract = FALSE;
-
-	/**
-	 * @var boolean
-	 */
-	protected $final = FALSE;
+	protected $type;
 
 	/**
 	 * @var array
@@ -57,14 +52,17 @@ class NodeType {
 	protected $properties = array();
 
 	/**
-	 * @param string $name
-	 * @param bool $abstract
-	 * @param bool $final
+	 * @var array
 	 */
-	function __construct($name, $abstract = FALSE, $final = FALSE) {
+	protected $relatedNodeTypes = array();
+
+	/**
+	 * @param string $name
+	 * @param string $type
+	 */
+	function __construct($name, $type) {
 		$this->name = (string)$name;
-		$this->abstract = (boolean)$abstract;
-		$this->final = (boolean)$final;
+		$this->type = (string)$type;
 	}
 
 	/**
@@ -94,6 +92,17 @@ class NodeType {
 	 */
 	public function getFinal() {
 		return $this->final;
+	}
+
+	/**
+	 * @return array
+	 */
+	public function getDefaultConfiguration() {
+		return Arrays::arrayMergeRecursiveOverrule($this->configurationService->getTypeDefaultConfiguration($this->type), array(
+			'ui' => array(
+				'label' => $this->getLabel(),
+			)
+		));
 	}
 
 	/**
@@ -150,32 +159,33 @@ class NodeType {
 	/**
 	 * @return array
 	 */
-	public function getProperties() {
-		return $this->properties;
+	public function getRelatedNodeTypes() {
+		return $this->relatedNodeTypes;
 	}
 
 	/**
 	 * @return array
 	 */
-	public function getPropertiesConfiguration() {
-		$properties = array();
-		foreach ($this->properties as $property) {
-			/** @var Property $property */
-			$propertyName = $property->getName();
-			$configuration = $property->getConfiguration();
-
-			$properties[$propertyName] = $this->configurationService->mergeNodeTypeConfigurationWithDefaultConfiguration($propertyName, $this->getName(), $configuration);
-		}
-
-
-		return $properties;
+	public function getProperties() {
+		return $this->properties;
 	}
 
 	/**
 	 * @param array $properties
 	 */
 	public function setProperties($properties) {
-		$this->properties = $properties;
+		$this->properties = array();
+		foreach ($properties as $property) {
+			$this->initializeRelatedNodeTypes($property);
+			/** @var Property $property */
+			if ($property->isSkipProperty()) {
+				continue;
+			}
+			$propertyName = $property->getName();
+			$configuration = $property->getConfiguration();
+
+			$this->properties[$propertyName] = $this->configurationService->mergePropertyConfigurationWithDefaultConfiguration($propertyName, $this->getName(), $configuration);
+		}
 	}
 
 	/**
@@ -183,6 +193,22 @@ class NodeType {
 	 */
 	public function hasProperties() {
 		return (boolean)count($this->getProperties());
+	}
+
+	/**
+	 * @param Property $property
+	 * @return void
+	 */
+	protected function initializeRelatedNodeTypes(Property $property) {
+		if (substr($property->getType(), 0, 9) !== 'reference') {
+			return;
+		}
+
+		$configuration = $property->getConfiguration();
+		$nodeTypes = Arrays::getValueByPath($configuration, 'ui.inspector.editorOptions.nodeTypes') ?: array();
+		foreach ($nodeTypes as $nodeType) {
+			$this->relatedNodeTypes[$nodeType] = TRUE;
+		}
 	}
 
 }

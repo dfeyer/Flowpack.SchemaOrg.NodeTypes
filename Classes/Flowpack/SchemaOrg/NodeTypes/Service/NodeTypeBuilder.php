@@ -61,18 +61,16 @@ class NodeTypeBuilder {
 		$filename = $this->getFilename();
 		$dumper = new Dumper();
 
-		$configuration = array(
-			'abstract' => TRUE,
-			'ui' => array(
-				'label' => $nodeType->getLabel(),
-				'icon' => 'icon-gear'
-			)
-		);
+		$configuration = $nodeType->getDefaultConfiguration();
 		if ($nodeType->hasSuperTypes()) {
-			$configuration['superTypes'] = $nodeType->getSuperTypes();
+			if (!isset($configuration['superTypes'])) {
+				$configuration['superTypes'] = $nodeType->getSuperTypes();
+			} else {
+				$configuration['superTypes'] = array_merge($nodeType->getSuperTypes(), $configuration['superTypes']);
+			}
 		}
 		if ($nodeType->hasProperties()) {
-			$configuration['properties'] = $nodeType->getPropertiesConfiguration();
+			$configuration['properties'] = $nodeType->getProperties();
 		}
 		$nodeTypeDefinition = array(
 			$nodeType->getName() => Arrays::arrayMergeRecursiveOverrule($configuration, $nodeType->getConfiguration())

@@ -14,6 +14,7 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
 use Flowpack\SchemaOrg\NodeTypes\Service\ConfigurationService;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\Flow\Utility\Arrays;
+use TYPO3\Flow\Utility\Unicode\Functions;
 
 /**
  * Properties
@@ -71,6 +72,11 @@ class Property {
 	protected $ui = array();
 
 	/**
+	 * @var boolean
+	 */
+	protected $skipProperty = FALSE;
+
+	/**
 	 * @param ConfigurationService $configurationService
 	 * @param string $type
 	 * @param string $name
@@ -82,7 +88,7 @@ class Property {
 	 */
 	public function __construct(ConfigurationService $configurationService, $type, $name, $label, $comment, $groupName, $reloadIfChanged = FALSE) {
 		$this->configurationService = $configurationService;
-		$this->type = $this->convertDataType($type);
+		$this->type = $this->convertDataType($type, $name);
 		$this->name = (string)$name;
 		$this->label = (string)$label;
 		$this->comment = (string)$comment;
@@ -97,6 +103,20 @@ class Property {
 	}
 
 	/**
+	 * @return boolean
+	 */
+	public function isSkipProperty() {
+		return $this->skipProperty;
+	}
+
+	/**
+	 * @param boolean $skipProperty
+	 */
+	public function setSkipProperty($skipProperty) {
+		$this->skipProperty = $skipProperty;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getName() {
@@ -104,14 +124,20 @@ class Property {
 	}
 
 	/**
-	 * @param string $schemaOrgPropertyName
 	 * @return string
-	 * @throws \InvalidArgumentException
-	 * @todo add support for references
 	 */
-	protected function convertDataType($schemaOrgPropertyName) {
+	public function getType() {
+		return $this->type;
+	}
+
+	/**
+	 * @param string $schemaOrgPropertyName
+	 * @param string $propertyName
+	 * @return string
+	 */
+	protected function convertDataType($schemaOrgPropertyName, $propertyName) {
 		if (strpos($schemaOrgPropertyName, ':')) {
-			$type = substr($schemaOrgPropertyName, -1) === 's' ? 'reference' : 'references';
+			$type = Functions::substr($propertyName, -1) === 's' ? 'references' : 'reference';
 			$schemaOrgPropertyName = $this->configurationService->nodeTypeNameMapping($schemaOrgPropertyName);
 			$this->ui = Arrays::setValueByPath($this->ui, 'inspector', array(
 				'editorOptions' => array(
