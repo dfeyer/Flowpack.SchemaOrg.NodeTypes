@@ -63,49 +63,55 @@ class SchemaCommandController extends CommandController {
 	 * @param string $type The Type from schema.org
 	 */
 	public function extractCommand($name = NULL, $packageKey = NULL, $type = NULL) {
-		$name = $name ?: 'Default';
-		$this->configurationService->setPackageKey($packageKey);
-		$this->outputLine();
-		$this->outputFormatted("# Extracting schema.org ...");
+		try {
+			$name = $name ?: 'Default';
+			$this->configurationService->setPackageKey($packageKey);
+			$this->outputLine();
+			$this->outputFormatted("# Extracting schema.org ...");
 
-		$this->schemaParserService->setAllSchemaJsonFilename($this->jsonSchema);
+			$this->schemaParserService->setAllSchemaJsonFilename($this->jsonSchema);
 
-		if ($type !== NULL) {
-			$nodeTypes = $this->schemaParserService->parseByTypes(explode(',', $type));
-		} else {
-			$nodeTypes = $this->schemaParserService->parseAll();
-		}
-
-		$filename = 'NodeTypes.SchemaOrg.' . $name . '.yaml';
-
-		$this->nodeTypeBuilder
-			->setFilename($filename)
-			->unlinkExistingFile();
-
-		$success = $error = 0;
-		foreach ($nodeTypes as $nodeType) {
-			/** @var NodeType $nodeType */
-			$this->outputLine("+ <b>" . $nodeType->getName() . "</b>");
-
-			try {
-				$existingNodeType = $this->nodeTypeManager->getNodeType($nodeType->getName());
-				$this->outputFormatted("   - <b>NodeType \"%s\" skipped</b>, update is not supported ...", array($existingNodeType->getName()));
-				++$error;
-			} catch (NodeTypeNotFoundException $exception) {
-				$filename = $this->nodeTypeBuilder->dump($nodeType);
-				++$success;
+			if ($type !== NULL) {
+				$nodeTypes = $this->schemaParserService->parseByTypes(explode(',', $type));
+			} else {
+				$nodeTypes = $this->schemaParserService->parseAll();
 			}
-		}
 
-		$this->outputLine();
-		if ($success > 0) {
-			$this->outputFormatted("The following file contain your new NodeType: " . $filename);
-		} else {
-			$this->outputFormatted("Nothing to do ...");
-		}
+			$filename = 'NodeTypes.SchemaOrg.' . $name . '.yaml';
 
-		$this->outputLine();
-		$this->outputFormatted("We are on Github, Pull request welcome or open an issue if you have trouble ...");
+			$this->nodeTypeBuilder
+				->setFilename($filename)
+				->unlinkExistingFile();
+
+			$success = $error = 0;
+			foreach ($nodeTypes as $nodeType) {
+				/** @var NodeType $nodeType */
+				$this->outputLine("+ <b>" . $nodeType->getName() . "</b>");
+
+				try {
+					$existingNodeType = $this->nodeTypeManager->getNodeType($nodeType->getName());
+					$this->outputFormatted("   - <b>NodeType \"%s\" skipped</b>, update is not supported ...", array($existingNodeType->getName()));
+					++$error;
+				} catch (NodeTypeNotFoundException $exception) {
+					$filename = $this->nodeTypeBuilder->dump($nodeType);
+					++$success;
+				}
+			}
+
+			$this->outputLine();
+			if ($success > 0) {
+				$this->outputFormatted("The following file contain your new NodeType: " . $filename);
+			} else {
+				$this->outputFormatted("Nothing to do ...");
+			}
+
+			$this->outputLine();
+			$this->outputFormatted("We are on Github, Pull request welcome or open an issue if you have trouble ...");
+		} catch (\InvalidArgumentException $exception) {
+			$this->outputLine();
+			$this->outputFormatted($exception->getMessage());
+			$this->sendAndExit(1);
+		}
 	}
 
 }
