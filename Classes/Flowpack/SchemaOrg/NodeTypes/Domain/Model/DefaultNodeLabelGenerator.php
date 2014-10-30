@@ -13,6 +13,7 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
 
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\TYPO3CR\Domain\Model\AbstractNodeData;
+use TYPO3\TYPO3CR\Domain\Model\NodeInterface;
 use TYPO3\TYPO3CR\Domain\Model\NodeLabelGeneratorInterface;
 
 /**
@@ -25,15 +26,15 @@ class DefaultNodeLabelGenerator implements NodeLabelGeneratorInterface {
 	/**
 	 * Render a node label
 	 *
-	 * @param AbstractNodeData $nodeData
+	 * @param NodeInterface $node
 	 * @param boolean $crop
 	 * @return string
 	 */
-	public function getLabel(AbstractNodeData $nodeData, $crop = TRUE) {
-		if ($nodeData->hasProperty('name') === TRUE && $nodeData->getProperty('name') !== '') {
-			$label = strip_tags($nodeData->getProperty('name'));
+	public function getLabel(NodeInterface $node, $crop = TRUE) {
+		if ($node->hasProperty('name') === TRUE && $node->getProperty('name') !== '') {
+			$label = strip_tags($node->getProperty('name'));
 		} else {
-			$label = ($nodeData->getNodeType()->getLabel() ?: $nodeData->getNodeType()->getName()) . ' (' . $nodeData->getName() . ')';
+			$label = ($node->getNodeType()->getLabel() ?: $node->getNodeType()->getName()) . ' (' . $node->getName() . ')';
 		}
 
 		return $label;
