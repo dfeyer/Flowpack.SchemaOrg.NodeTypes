@@ -75,6 +75,13 @@ class NodeType {
 	/**
 	 * @return string
 	 */
+	public function getType() {
+		return $this->type;
+	}
+
+	/**
+	 * @return string
+	 */
 	public function getLabel() {
 		list(, $label) = explode(':', $this->getName());
 		return $label;
@@ -210,5 +217,4 @@ class NodeType {
 			$this->relatedNodeTypes[$nodeType] = TRUE;
 		}
 	}
-
 }

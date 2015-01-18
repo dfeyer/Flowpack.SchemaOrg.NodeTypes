@@ -26,30 +26,49 @@ use TYPO3\Flow\Utility\Now;
 class NodeTypeBuilder {
 
 	/**
+	 * @Flow\Inject(setting="filenamePostfix")
+	 * @var string
+	 */
+	protected $filenamePostfix;
+
+	/**
+	 * @Flow\Inject(setting="filenamePrefix")
+	 * @var string
+	 */
+	protected $filenamePrefix = 'NodeTypes.SchemaOrg.';
+
+	/**
 	 * @Flow\Inject(setting="renderedNodeTypeRootPath")
 	 * @var string
 	 */
 	protected $renderedNodeTypeRootPath;
 
 	/**
-	 * @var string
-	 */
-	protected $filename;
-
-	/**
-	 * @param string $filename
+	 * @param string $nodeTypeName
 	 * @return $this
 	 */
-	public function setFilename($filename) {
-		$this->filename = $filename;
+	public function setFilename($nodeTypeName) {
+		$this->filenamePrefix = $this->filenamePrefix . $nodeTypeName . $this->filenamePostfix;
 		return $this;
 	}
 
 	/**
+	 * @param string $nodeTypeName
+	 * @return string
+	 */
+	protected function getFilename($nodeTypeName) {
+		if (trim($nodeTypeName) === '') {
+			throw new \InvalidArgumentException("Please set the filename property ...", 1412162107);
+		}
+		return $this->filenamePrefix . $nodeTypeName . $this->filenamePostfix;
+	}
+
+	/**
+	 * @param string $nodeTypeName
 	 * @return $this
 	 */
-	public function unlinkExistingFile() {
-		Files::unlink($this->getSavePathAndFilename($this->filename));
+	public function unlinkExistingFile($nodeTypeName) {
+		Files::unlink($this->getSavePathAndFilename($this->getFilename($nodeTypeName)));
 		return $this;
 	}
 
@@ -58,10 +77,11 @@ class NodeTypeBuilder {
 	 * @return string
 	 */
 	public function dump(NodeType $nodeType) {
-		$filename = $this->getFilename();
+		$this->unlinkExistingFile($nodeType->getType());
+		$filename = $this->getFilename($nodeType->getType());
+		$configuration = $nodeType->getDefaultConfiguration();
 		$dumper = new Dumper();
 
-		$configuration = $nodeType->getDefaultConfiguration();
 		if ($nodeType->hasSuperTypes()) {
 			if (!isset($configuration['superTypes'])) {
 				$configuration['superTypes'] = $nodeType->getSuperTypes();
@@ -87,21 +107,10 @@ class NodeTypeBuilder {
 	}
 
 	/**
-	 * @return string
-	 */
-	protected function getFilename() {
-		if (trim($this->filename) === '') {
-			throw new \InvalidArgumentException("Please set the filename property ...", 1412162107);
-		}
-		return $this->filename;
-	}
-
-	/**
 	 * @param string $filename
 	 * @return string
 	 */
 	protected function getSavePathAndFilename($filename) {
 		return $this->renderedNodeTypeRootPath . $filename;
 	}
-
 }
