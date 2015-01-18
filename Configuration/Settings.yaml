@@ -25,7 +25,6 @@ Flowpack:
       typeDefaultConfiguration:
         '*':
           abstract: TRUE
-          nodeLabelGenerator: 'Flowpack\SchemaOrg\NodeTypes\Domain\Model\DefaultNodeLabelGenerator'
           ui:
             icon: 'icon-gear'
 
