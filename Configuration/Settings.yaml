@@ -2,6 +2,8 @@ Flowpack:
   SchemaOrg:
     NodeTypes:
       renderedNodeTypeRootPath: '%FLOW_PATH_DATA%NodeTypes/Configuration/'
+      filenamePrefix: 'NodeTypes.SchemaOrg.'
+      filenamePostfix: '.yaml'
 
       defaultPackageKey: 'Flowpack.SchemaOrg.NodeTypes'
 

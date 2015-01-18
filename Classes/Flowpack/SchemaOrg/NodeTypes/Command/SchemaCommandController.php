@@ -77,12 +77,6 @@ class SchemaCommandController extends CommandController {
 				$nodeTypes = $this->schemaParserService->parseAll();
 			}
 
-			$filename = 'NodeTypes.SchemaOrg.' . $name . '.yaml';
-
-			$this->nodeTypeBuilder
-				->setFilename($filename)
-				->unlinkExistingFile();
-
 			$success = $error = 0;
 			foreach ($nodeTypes as $nodeType) {
 				/** @var NodeType $nodeType */
@@ -100,7 +94,7 @@ class SchemaCommandController extends CommandController {
 
 			$this->outputLine();
 			if ($success > 0) {
-				$this->outputFormatted("The following file contain your new NodeType: " . $filename);
+				$this->outputFormatted("Find your new NodeTypes in Data/NodeTypes/Configuration");
 			} else {
 				$this->outputFormatted("Nothing to do ...");
 			}
@@ -113,5 +107,4 @@ class SchemaCommandController extends CommandController {
 			$this->sendAndExit(1);
 		}
 	}
-
 }
