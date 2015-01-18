@@ -94,7 +94,7 @@ class Property {
 		$this->comment = (string)$comment;
 		$this->ui = Arrays::arrayMergeRecursiveOverrule($this->ui, array(
 			'label' => $this->label,
-			'comment' => $this->comment,
+			//'comment' => $this->comment,
 			'inspector' => array(
 				'group' => $groupName
 			)

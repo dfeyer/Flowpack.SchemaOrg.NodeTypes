@@ -72,8 +72,8 @@ Flowpack:
         'articleBody':
           - 'Flowpack.SchemaOrg.NodeTypes:ArticleBodyMixin'
 
-        'comment':
-          - 'Flowpack.SchemaOrg.NodeTypes:CommentMixin'
+#        'comment':
+#          - 'Flowpack.SchemaOrg.NodeTypes:CommentMixin'
 
 #        'address':
 #          - 'Flowpack.SchemaOrg.NodeTypes:AdressMixin'
