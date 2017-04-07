@@ -216,3 +216,39 @@ Flowpack:
 		    validation:
 		      'Neos.Neos/Validation/EmailAddressValidator': []
 ```
+
+Fusion prototype generation
+---------------------------
+
+As you might want to use the generate schema properties to be included as `JSON-LD` in your template and not 
+copy paste all properties into Fusion or Fluid (Fusion preferred of course), we provide a Fusion-Generator
+that auto-generates Fusion prototypes for every abstract NodeType that is used in your node.
+ 
+Given you have a nodeType definition and auto-generated the `JobPosting` schema e.g.
+
+```yaml
+'My.Site:Job':
+  options:
+    fusion:
+      prototypeGenerator: Flowpack\SchemaOrg\NodeTypes\Domain\Service\SchemaOrgPrototypeGenerator
+  superTypes:
+    'Neos.NodeTypes:Page': true
+    'My.Site:JobPosting': true
+```
+
+The prototype generator will generate Fusion objects for all abstract superTypes with name `My.Site:JobPosting.Schema`
+that is a `Neos.Fusion:RawArray` containing all properties already.
+
+You can simply use:
+
+```neosfusion
+jobPostingMeta = Neos.Fusion:Tag {
+    tagName = 'script'
+    attributes.type = 'application/ld+json'
+    content = My.Site:JobPosting.Schema {
+        @process.json = ${Json.stringify(value)}
+    }
+}
+```
+
+to have a full `JSON-LD` in your frontend without manually mapping all properties.

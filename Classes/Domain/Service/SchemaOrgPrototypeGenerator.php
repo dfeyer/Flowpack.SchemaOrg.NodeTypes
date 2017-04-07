@@ -33,7 +33,7 @@ class SchemaOrgPrototypeGenerator implements DefaultPrototypeGeneratorInterface
             }
 
             $output .= chr(10);
-            $output .= 'prototype(' . $superType->getName() . ') < prototype(Neos.Fusion:RawArray) {' . chr(10);
+            $output .= 'prototype(' . $superType->getName() . '.Schema) < prototype(Neos.Fusion:RawArray) {' . chr(10);
 
             $output .= "\t" . '\'@context\' = \'http://schema.org\'' . chr(10);
             list($packageKey, $relativeName) = explode(':', $superType->getName(), 2);
@@ -45,6 +45,8 @@ class SchemaOrgPrototypeGenerator implements DefaultPrototypeGeneratorInterface
                     if (isset($propertyConfiguration['type']) && $propertyConfiguration['type'] === 'DateTime') {
                         $output .= "\t" . $propertyName . '.@process.formatDate = ${Date.format(value, \'Y-m-d\')}' . chr(10);
                     }
+                    $output .= "\t" . $propertyName . '.@if.notEmpty = ${q(node).property("' . $propertyName . '") != null}' . chr(10);
+                    
                     // todo: handle reference types as nested RawArray
                 }
             }
