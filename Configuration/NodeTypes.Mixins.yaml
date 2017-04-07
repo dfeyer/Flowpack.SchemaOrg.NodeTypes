@@ -79,7 +79,7 @@
   abstract: TRUE
   properties:
     photo:
-      type: TYPO3\Media\Domain\Model\ImageVariant
+      type: TYPO3\Media\Domain\Model\ImageInterface
       ui:
         label: 'Image'
         reloadIfChanged: TRUE
@@ -90,7 +90,7 @@
   abstract: TRUE
   properties:
     photos:
-      type: TYPO3\Media\Domain\Model\ImageVariant
+      type: TYPO3\Media\Domain\Model\ImageInterface
       ui:
         label: 'Images'
         reloadIfChanged: TRUE
