@@ -46,7 +46,7 @@ class SchemaCommandController extends CommandController
     protected $configurationService;
 
     /**
-     * @Flow\Inject(setting="schemas.jsonFilename")
+     * @Flow\InjectConfiguration("schemas.jsonFilename")
      * @var string
      */
     protected $jsonSchema;

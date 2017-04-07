@@ -20,7 +20,7 @@ class NodeTypeBuilder
 {
 
     /**
-     * @Flow\Inject(setting="renderedNodeTypeRootPath")
+     * @Flow\InjectConfiguration("renderedNodeTypeRootPath")
      * @var string
      */
     protected $renderedNodeTypeRootPath;

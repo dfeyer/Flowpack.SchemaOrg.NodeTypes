@@ -16,37 +16,37 @@ class ConfigurationService
 {
 
     /**
-     * @Flow\Inject(setting="nodeTypeMapping")
-     * @var string
+     * @Flow\InjectConfiguration("nodeTypeMapping")
+     * @var array
      */
     protected $nodeTypeMapping;
 
     /**
-     * @Flow\Inject(setting="propertyDefaultConfiguration")
-     * @var string
+     * @Flow\InjectConfiguration("propertyDefaultConfiguration")
+     * @var array
      */
     protected $propertyDefaultConfiguration;
 
     /**
-     * @Flow\Inject(setting="typeDefaultConfiguration")
-     * @var string
+     * @Flow\InjectConfiguration("typeDefaultConfiguration")
+     * @var array
      */
     protected $typeDefaultConfiguration;
 
     /**
-     * @Flow\Inject(setting="propertyMixinsMapping")
-     * @var string
+     * @Flow\InjectConfiguration("propertyMixinsMapping")
+     * @var array
      */
     protected $propertyMixinsMapping;
 
     /**
-     * @Flow\Inject(setting="propertyBlackList")
-     * @var string
+     * @Flow\InjectConfiguration("propertyBlackList")
+     * @var array
      */
     protected $propertyBlackList;
 
     /**
-     * @Flow\Inject(setting="defaultPackageKey")
+     * @Flow\InjectConfiguration("defaultPackageKey")
      * @var string
      */
     protected $defaultPackageKey;

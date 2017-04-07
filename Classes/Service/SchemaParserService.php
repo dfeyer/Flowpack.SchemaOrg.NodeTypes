@@ -24,7 +24,7 @@ class SchemaParserService
     protected $configurationService;
 
     /**
-     * @Flow\Inject(setting="schemas.jsonFilename")
+     * @Flow\InjectConfiguration("schemas.jsonFilename")
      * @var string
      */
     protected $allSchemaJsonFilename;
