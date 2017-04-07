@@ -9,7 +9,7 @@ Flowpack:
         jsonFilename: 'resource://Flowpack.SchemaOrg.NodeTypes/Private/Schema/All.json'
 
       nodeTypeMapping:
-        ImageObject: 'TYPO3.Neos.NodeTypes:Image'
+        ImageObject: 'Neos.NodeTypes:Image'
 
       propertyBlackList:
         # todo: add support for relation to an other Document
@@ -32,7 +32,7 @@ Flowpack:
         'Review':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos.NodeTypes:Page'
+            - 'Neos.NodeTypes:Page'
 
         'PostalAddress':
           ui:
@@ -49,7 +49,7 @@ Flowpack:
         'Event':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos.NodeTypes:Page'
+            - 'Neos.NodeTypes:Page'
 
         'Place':
           abstract: FALSE
@@ -64,8 +64,8 @@ Flowpack:
 
       propertyMixinsMapping:
         'image':
-          - 'TYPO3.Neos.NodeTypes:ImageMixin'
-          - 'TYPO3.Neos.NodeTypes:ImageCaptionMixin'
+          - 'Neos.NodeTypes:ImageMixin'
+          - 'Neos.NodeTypes:ImageCaptionMixin'
 
         'description':
           - 'Flowpack.SchemaOrg.NodeTypes:DescriptionMixin'
