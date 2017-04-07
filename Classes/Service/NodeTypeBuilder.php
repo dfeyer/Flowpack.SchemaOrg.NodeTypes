@@ -61,9 +61,13 @@ class NodeTypeBuilder
         $configuration = $nodeType->getDefaultConfiguration();
         if ($nodeType->hasSuperTypes()) {
             if (!isset($configuration['superTypes'])) {
-                $configuration['superTypes'] = $nodeType->getSuperTypes();
+                $superTypes = $nodeType->getSuperTypes();
             } else {
-                $configuration['superTypes'] = array_merge($nodeType->getSuperTypes(), $configuration['superTypes']);
+                $superTypes = array_merge($nodeType->getSuperTypes(), $configuration['superTypes']);
+            }
+            $configuration['superTypes'] = [];
+            foreach ($superTypes as $superType) {
+                $configuration['superTypes'][$superType] = true;
             }
         }
         if ($nodeType->hasProperties()) {
