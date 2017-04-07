@@ -14,14 +14,14 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
 use TYPO3\Flow\Annotations as Flow;
 use TYPO3\TYPO3CR\Domain\Model\AbstractNodeData;
 use TYPO3\TYPO3CR\Domain\Model\NodeInterface;
-use TYPO3\TYPO3CR\Domain\Model\NodeLabelGeneratorInterface;
+use TYPO3\TYPO3CR\Domain\Model\NodeDataLabelGeneratorInterface;
 
 /**
  * The default node label generator; used if no-other is configured
  *
  * @Flow\Scope("singleton")
  */
-class DefaultNodeLabelGenerator implements NodeLabelGeneratorInterface {
+class FallbackNodeDataLabelGenerator implements NodeDataLabelGeneratorInterface {
 
 	/**
 	 * Render a node label
