@@ -1,5 +1,5 @@
-TYPO3 Neos Utility to create NodeType based on schema.org
-=========================================================
+Neos Utility to create NodeType based on schema.org
+===================================================
 
 This plugin provides a service to create NodeType YAML configuration based on schema.org
 type. You can found the full schema.org types list here: http://schema.org/docs/full.html
@@ -151,7 +151,7 @@ Flowpack:
         'Review':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos.NodeTypes:Page'
+            - 'Neos.NodeTypes:Page'
         'PostalAddress':
           ui:
             icon: 'icon-building'
@@ -167,7 +167,7 @@ Flowpack:
   SchemaOrg:
     NodeTypes:
       nodeTypeMapping:
-	  	ImageObject: 'TYPO3.Neos.NodeTypes:Image'
+	  	ImageObject: 'Neos.NodeTypes:Image'
 ```
 
 Configuration: Property Blacklist
@@ -195,8 +195,8 @@ Flowpack:
     NodeTypes:
       propertyMixinsMapping:
 	    'image':
-		  - 'TYPO3.Neos.NodeTypes:ImageMixin'
-		  - 'TYPO3.Neos.NodeTypes:ImageCaptionMixin'
+		  - 'Neos.NodeTypes:ImageMixin'
+		  - 'Neos.NodeTypes:ImageCaptionMixin'
 ```
 
 Configuration: Override property configuration
@@ -214,5 +214,5 @@ Flowpack:
 		  type: 'string'
 		  validation:
 		    validation:
-		      'TYPO3.Neos/Validation/EmailAddressValidator': []
+		      'Neos.Neos/Validation/EmailAddressValidator': []
 ```

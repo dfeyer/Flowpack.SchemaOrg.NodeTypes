@@ -33,14 +33,14 @@
   abstract: TRUE
   childNodes:
     articleBody:
-      type: 'TYPO3.Neos:ContentCollection'
+      type: 'Neos.Neos:ContentCollection'
 
 # Comment mixin
 'Flowpack.SchemaOrg.NodeTypes:CommentMixin':
   abstract: TRUE
   childNodes:
     comment:
-      type: 'TYPO3.Neos:ContentCollection'
+      type: 'Neos.Neos:ContentCollection'
       constraints:
         nodeTypes:
           '*': FALSE
@@ -79,7 +79,7 @@
   abstract: TRUE
   properties:
     photo:
-      type: TYPO3\Media\Domain\Model\ImageVariant
+      type: Neos\Media\Domain\Model\ImageInterface
       ui:
         label: 'Image'
         reloadIfChanged: TRUE
@@ -90,7 +90,7 @@
   abstract: TRUE
   properties:
     photos:
-      type: TYPO3\Media\Domain\Model\ImageVariant
+      type: Neos\Media\Domain\Model\ImageInterface
       ui:
         label: 'Images'
         reloadIfChanged: TRUE
