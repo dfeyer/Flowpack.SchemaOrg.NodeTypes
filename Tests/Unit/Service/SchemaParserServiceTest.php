@@ -12,8 +12,8 @@ namespace TYPO3\Neos\Tests\Unit\Service;
  *                                                                               */
 
 use Flowpack\SchemaOrg\NodeTypes\Service\SchemaParserService;
-use TYPO3\Flow\Reflection\ObjectAccess;
-use TYPO3\Flow\Tests\UnitTestCase;
+use Neos\Flow\Reflection\ObjectAccess;
+use Neos\Flow\Tests\UnitTestCase;
 
 /**
  * Testcase for the HTML Augmenter

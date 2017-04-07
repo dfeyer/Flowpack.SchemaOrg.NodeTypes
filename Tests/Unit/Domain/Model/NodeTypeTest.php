@@ -12,7 +12,7 @@ namespace TYPO3\Neos\Tests\Unit\Domain\Model;
  *                                                                               */
 
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
-use TYPO3\Flow\Tests\UnitTestCase;
+use Neos\Flow\Tests\UnitTestCase;
 
 /**
  * NodeType Tests

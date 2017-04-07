@@ -12,9 +12,9 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
  *                                                                               */
 
 use Flowpack\SchemaOrg\NodeTypes\Service\ConfigurationService;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Utility\Arrays;
-use TYPO3\Flow\Utility\Unicode\Functions;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Utility\Arrays;
+use Neos\Flow\Utility\Unicode\Functions;
 
 /**
  * Properties

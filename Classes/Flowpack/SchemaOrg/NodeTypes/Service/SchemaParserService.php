@@ -13,8 +13,8 @@ namespace Flowpack\SchemaOrg\NodeTypes\Service;
 
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\Property;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Utility\Arrays;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Utility\Arrays;
 
 /**
  * Schema.org Parser

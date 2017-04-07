@@ -13,10 +13,10 @@ namespace Flowpack\SchemaOrg\NodeTypes\Service;
 
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
 use Symfony\Component\Yaml\Dumper;
-use TYPO3\Flow\Annotations as Flow;
-use TYPO3\Flow\Utility\Arrays;
-use TYPO3\Flow\Utility\Files;
-use TYPO3\Flow\Utility\Now;
+use Neos\Flow\Annotations as Flow;
+use Neos\Flow\Utility\Arrays;
+use Neos\Flow\Utility\Files;
+use Neos\Flow\Utility\Now;
 
 /**
  * Neos NodeType builder
