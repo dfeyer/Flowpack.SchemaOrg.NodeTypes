@@ -50,6 +50,11 @@ class SchemaCommandController extends CommandController
      * @var string
      */
     protected $jsonSchema;
+    /**
+     * @Flow\InjectConfiguration(path="fallbackNodeType",package="Neos.ContentRepository")
+     * @var string
+     */
+    protected $fallbackNodeTypeName;
 
     /**
      * Extract Schema.org to build NodeTypes configuration
@@ -87,6 +92,9 @@ class SchemaCommandController extends CommandController
 
                 try {
                     $existingNodeType = $this->nodeTypeManager->getNodeType($nodeType->getName());
+                    if ($existingNodeType->getName() === $this->fallbackNodeTypeName) {
+                        throw new NodeTypeNotFoundException();
+                    }
                     $this->outputFormatted('   - <b>NodeType "%s" skipped</b>, update is not supported ...', [$existingNodeType->getName()]);
                     ++$error;
                 } catch (NodeTypeNotFoundException $exception) {
