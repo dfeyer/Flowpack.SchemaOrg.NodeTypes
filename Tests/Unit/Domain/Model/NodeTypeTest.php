@@ -1,5 +1,5 @@
 <?php
-namespace TYPO3\Neos\Tests\Unit\Domain\Model;
+namespace Neos\Neos\Tests\Unit\Domain\Model;
 
 /*                                                                               *
  * This script belongs to the TYPO3 Flow package "Flowpack.SchemaOrg.NodeTypes". *

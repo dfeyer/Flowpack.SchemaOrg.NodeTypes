@@ -54,12 +54,12 @@ Flowpack:
         'Place':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos:Content'
+            - 'Neos.Neos:Content'
 
         'VideoObject':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos:Content'
+            - 'Neos.Neos:Content'
 
 
       propertyMixinsMapping:
@@ -103,7 +103,7 @@ Flowpack:
           type: 'string'
           validation:
             validation:
-              'TYPO3.Neos/Validation/EmailAddressValidator': []
+              'Neos.Neos/Validation/EmailAddressValidator': []
 
         'logo':
           type: Neos\Media\Domain\Model\ImageInterface
@@ -113,7 +113,7 @@ Flowpack:
         'proficiencyLevel':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -127,7 +127,7 @@ Flowpack:
         'accessibilityAPI':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -159,7 +159,7 @@ Flowpack:
         'accessibilityControl':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -181,7 +181,7 @@ Flowpack:
         'accessibilityFeature':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -249,7 +249,7 @@ Flowpack:
         'accessibilityHazard':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -270,7 +270,7 @@ Flowpack:
         'educationalUse':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -283,7 +283,7 @@ Flowpack:
         'interactivityType':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
