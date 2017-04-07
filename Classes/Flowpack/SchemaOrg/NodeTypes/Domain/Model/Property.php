@@ -13,7 +13,7 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
 
 use Flowpack\SchemaOrg\NodeTypes\Service\ConfigurationService;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Utility\Arrays;
+use Neos\Utility\Arrays;
 use Neos\Flow\Utility\Unicode\Functions;
 
 /**

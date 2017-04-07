@@ -12,7 +12,7 @@ namespace Flowpack\SchemaOrg\NodeTypes\Service;
  *                                                                               */
 
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Utility\Arrays;
+use Neos\Utility\Arrays;
 
 /**
  * Configuration Service

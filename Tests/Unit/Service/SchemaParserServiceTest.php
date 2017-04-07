@@ -12,7 +12,7 @@ namespace TYPO3\Neos\Tests\Unit\Service;
  *                                                                               */
 
 use Flowpack\SchemaOrg\NodeTypes\Service\SchemaParserService;
-use Neos\Flow\Reflection\ObjectAccess;
+use Neos\Utility\ObjectAccess;
 use Neos\Flow\Tests\UnitTestCase;
 
 /**

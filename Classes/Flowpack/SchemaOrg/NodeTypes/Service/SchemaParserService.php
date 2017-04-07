@@ -14,7 +14,7 @@ namespace Flowpack\SchemaOrg\NodeTypes\Service;
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\Property;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Utility\Arrays;
+use Neos\Utility\Arrays;
 
 /**
  * Schema.org Parser

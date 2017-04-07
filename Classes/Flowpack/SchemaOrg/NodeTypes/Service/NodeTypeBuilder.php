@@ -14,8 +14,8 @@ namespace Flowpack\SchemaOrg\NodeTypes\Service;
 use Flowpack\SchemaOrg\NodeTypes\Domain\Model\NodeType;
 use Symfony\Component\Yaml\Dumper;
 use Neos\Flow\Annotations as Flow;
-use Neos\Flow\Utility\Arrays;
-use Neos\Flow\Utility\Files;
+use Neos\Utility\Arrays;
+use Neos\Utility\Files;
 use Neos\Flow\Utility\Now;
 
 /**
