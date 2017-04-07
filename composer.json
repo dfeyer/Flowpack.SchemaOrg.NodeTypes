@@ -1,13 +1,13 @@
 {
     "name": "flowpack/schemaorg-nodetypes",
-    "type": "typo3-flow-package",
-    "description": "Add description here",
+    "type": "neos-package",
+    "description": "Generate nodeType YAML definitions from schema.org types",
     "require": {
-        "typo3/flow": "*"
+        "neos/flow": "^4.0"
     },
     "autoload": {
-        "psr-0": {
-            "Flowpack\\SchemaOrg\\NodeTypes": "Classes"
+        "psr-4": {
+            "Flowpack\\SchemaOrg\\NodeTypes\\": "Classes"
         }
     },
     "extra": {
