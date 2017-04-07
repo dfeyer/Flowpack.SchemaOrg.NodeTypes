@@ -9,7 +9,7 @@ Flowpack:
         jsonFilename: 'resource://Flowpack.SchemaOrg.NodeTypes/Private/Schema/All.json'
 
       nodeTypeMapping:
-        ImageObject: 'TYPO3.Neos.NodeTypes:Image'
+        ImageObject: 'Neos.NodeTypes:Image'
 
       propertyBlackList:
         # todo: add support for relation to an other Document
@@ -32,7 +32,7 @@ Flowpack:
         'Review':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos.NodeTypes:Page'
+            - 'Neos.NodeTypes:Page'
 
         'PostalAddress':
           ui:
@@ -49,23 +49,23 @@ Flowpack:
         'Event':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos.NodeTypes:Page'
+            - 'Neos.NodeTypes:Page'
 
         'Place':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos:Content'
+            - 'Neos.Neos:Content'
 
         'VideoObject':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos:Content'
+            - 'Neos.Neos:Content'
 
 
       propertyMixinsMapping:
         'image':
-          - 'TYPO3.Neos.NodeTypes:ImageMixin'
-          - 'TYPO3.Neos.NodeTypes:ImageCaptionMixin'
+          - 'Neos.NodeTypes:ImageMixin'
+          - 'Neos.NodeTypes:ImageCaptionMixin'
 
         'description':
           - 'Flowpack.SchemaOrg.NodeTypes:DescriptionMixin'
@@ -103,17 +103,17 @@ Flowpack:
           type: 'string'
           validation:
             validation:
-              'TYPO3.Neos/Validation/EmailAddressValidator': []
+              'Neos.Neos/Validation/EmailAddressValidator': []
 
         'logo':
-          type: TYPO3\Media\Domain\Model\ImageVariant
+          type: Neos\Media\Domain\Model\ImageInterface
           ui:
             label: 'Image'
 
         'proficiencyLevel':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -127,7 +127,7 @@ Flowpack:
         'accessibilityAPI':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -159,7 +159,7 @@ Flowpack:
         'accessibilityControl':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -181,7 +181,7 @@ Flowpack:
         'accessibilityFeature':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -249,7 +249,7 @@ Flowpack:
         'accessibilityHazard':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -270,7 +270,7 @@ Flowpack:
         'educationalUse':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -283,7 +283,7 @@ Flowpack:
         'interactivityType':
           ui:
             inspector:
-              editor: 'TYPO3.Neos/Inspector/Editors/SelectBoxEditor'
+              editor: 'Neos.Neos/Inspector/Editors/SelectBoxEditor'
               editorOptions:
                 values:
                   '':
@@ -296,4 +296,4 @@ Flowpack:
                     label: 'mixed'
 
         'associatedMedia':
-          type: array<TYPO3\Media\Domain\Model\Asset>
+          type: array<Neos\Media\Domain\Model\Asset>

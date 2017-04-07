@@ -1,5 +1,5 @@
-TYPO3 Neos Utility to create NodeType based on schema.org
-=========================================================
+Neos Utility to create NodeType based on schema.org
+===================================================
 
 This plugin provides a service to create NodeType YAML configuration based on schema.org
 type. You can found the full schema.org types list here: http://schema.org/docs/full.html
@@ -151,7 +151,7 @@ Flowpack:
         'Review':
           abstract: FALSE
           superTypes:
-            - 'TYPO3.Neos.NodeTypes:Page'
+            - 'Neos.NodeTypes:Page'
         'PostalAddress':
           ui:
             icon: 'icon-building'
@@ -167,7 +167,7 @@ Flowpack:
   SchemaOrg:
     NodeTypes:
       nodeTypeMapping:
-	  	ImageObject: 'TYPO3.Neos.NodeTypes:Image'
+	  	ImageObject: 'Neos.NodeTypes:Image'
 ```
 
 Configuration: Property Blacklist
@@ -195,8 +195,8 @@ Flowpack:
     NodeTypes:
       propertyMixinsMapping:
 	    'image':
-		  - 'TYPO3.Neos.NodeTypes:ImageMixin'
-		  - 'TYPO3.Neos.NodeTypes:ImageCaptionMixin'
+		  - 'Neos.NodeTypes:ImageMixin'
+		  - 'Neos.NodeTypes:ImageCaptionMixin'
 ```
 
 Configuration: Override property configuration
@@ -214,5 +214,41 @@ Flowpack:
 		  type: 'string'
 		  validation:
 		    validation:
-		      'TYPO3.Neos/Validation/EmailAddressValidator': []
+		      'Neos.Neos/Validation/EmailAddressValidator': []
 ```
+
+Fusion prototype generation
+---------------------------
+
+As you might want to use the generate schema properties to be included as `JSON-LD` in your template and not 
+copy paste all properties into Fusion or Fluid (Fusion preferred of course), we provide a Fusion-Generator
+that auto-generates Fusion prototypes for every abstract NodeType that is used in your node.
+ 
+Given you have a nodeType definition and auto-generated the `JobPosting` schema e.g.
+
+```yaml
+'My.Site:Job':
+  options:
+    fusion:
+      prototypeGenerator: Flowpack\SchemaOrg\NodeTypes\Domain\Service\SchemaOrgPrototypeGenerator
+  superTypes:
+    'Neos.NodeTypes:Page': true
+    'My.Site:JobPosting': true
+```
+
+The prototype generator will generate Fusion objects for all abstract superTypes with name `My.Site:JobPosting.Schema`
+that is a `Neos.Fusion:RawArray` containing all properties already.
+
+You can simply use:
+
+```neosfusion
+jobPostingMeta = Neos.Fusion:Tag {
+    tagName = 'script'
+    attributes.type = 'application/ld+json'
+    content = My.Site:JobPosting.Schema {
+        @process.json = ${Json.stringify(value)}
+    }
+}
+```
+
+to have a full `JSON-LD` in your frontend without manually mapping all properties.
