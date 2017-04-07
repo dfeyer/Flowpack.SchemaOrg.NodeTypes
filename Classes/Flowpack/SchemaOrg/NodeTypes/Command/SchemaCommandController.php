@@ -17,8 +17,8 @@ use Flowpack\SchemaOrg\NodeTypes\Service\NodeTypeBuilder;
 use Flowpack\SchemaOrg\NodeTypes\Service\SchemaParserService;
 use Neos\Flow\Annotations as Flow;
 use Neos\Flow\Cli\CommandController;
-use TYPO3\TYPO3CR\Domain\Service\NodeTypeManager;
-use TYPO3\TYPO3CR\Exception\NodeTypeNotFoundException;
+use Neos\ContentRepository\Domain\Service\NodeTypeManager;
+use Neos\ContentRepository\Exception\NodeTypeNotFoundException;
 
 /**
  * Schema.org Schema Extraction CLI

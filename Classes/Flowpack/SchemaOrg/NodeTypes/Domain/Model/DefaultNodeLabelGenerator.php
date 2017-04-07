@@ -12,9 +12,9 @@ namespace Flowpack\SchemaOrg\NodeTypes\Domain\Model;
  *                                                                               */
 
 use Neos\Flow\Annotations as Flow;
-use TYPO3\TYPO3CR\Domain\Model\AbstractNodeData;
-use TYPO3\TYPO3CR\Domain\Model\NodeInterface;
-use TYPO3\TYPO3CR\Domain\Model\NodeDataLabelGeneratorInterface;
+use Neos\ContentRepository\Domain\Model\AbstractNodeData;
+use Neos\ContentRepository\Domain\Model\NodeInterface;
+use Neos\ContentRepository\Domain\Model\NodeDataLabelGeneratorInterface;
 
 /**
  * The default node label generator; used if no-other is configured
